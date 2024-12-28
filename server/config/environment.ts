@@ -12,10 +12,19 @@ const DB_PASSWORD = process.env.DB_PASSWORD || 'postgres';
 const DB_NAME = process.env.DB_NAME || 'postgres';
 const DB_SYNC = process.env.DB_SYNC === 'true';
 
+const CORS_ALLOWED_HEADERS =
+    process.env.CORS_ALLOWED_HEADERS ||
+    'Access-Control-Allow-Headers,Origin,X-Requested-With,Content-Type,Accept,Authorization';
+const CORS_EXPOSED_HEADERS = process.env.CORS_EXPOSED_HEADERS || '';
+const CORS_WHITELIST = process.env.CORS_WHITELIST || '';
+
 export {
     APP_ENV,
     APP_PORT,
     APP_VERSION,
+    CORS_ALLOWED_HEADERS,
+    CORS_EXPOSED_HEADERS,
+    CORS_WHITELIST,
     DB_HOST,
     DB_NAME,
     DB_PASSWORD,
