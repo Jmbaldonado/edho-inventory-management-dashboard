@@ -25,7 +25,7 @@ export class MetricsService {
         const expenseByCategoryRaw =
             await this.expenseByCategoryService.getExpenseByCategory(5);
 
-        const expenseByCategory = expenseByCategoryRaw.map((item) => ({
+        const expenseByCategorySummary = expenseByCategoryRaw.map((item) => ({
             ...item,
             amount: item.amount.toString(),
         }));
@@ -35,7 +35,7 @@ export class MetricsService {
             saleSummary,
             purchaseSummary,
             expenseSummary,
-            expenseByCategory,
+            expenseByCategorySummary,
         };
     }
 }
