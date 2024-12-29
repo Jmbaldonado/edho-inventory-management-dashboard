@@ -1,6 +1,7 @@
 import { useGetDashboardMetricsQuery } from "@/state/api";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import numeral from "numeral";
+import { useEffect, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -15,6 +16,29 @@ export default function CardPurchaseSummary() {
   const purchaseData = data?.purchaseSummary || [];
 
   const lastDataPoint = purchaseData[purchaseData.length - 1] || null;
+
+  const [chartMargin, setChartMargin] = useState({
+    top: 0,
+    right: 0,
+    left: -50,
+    bottom: 45,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1280) {
+        setChartMargin({ top: 0, right: 0, left: -50, bottom: 80 });
+      } else {
+        setChartMargin({ top: 0, right: 0, left: -50, bottom: 45 });
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div className="flex flex-col justify-between row-span-2 xl:row-span-3 col-span-1 md:col-span-2 xl:col-span-1 bg-white shadow-md rounded-2xl">
@@ -61,10 +85,7 @@ export default function CardPurchaseSummary() {
             </div>
             {/* Chart */}
             <ResponsiveContainer width="100%" height={200} className="p-2">
-              <AreaChart
-                data={purchaseData}
-                margin={{ top: 0, right: 0, left: -50, bottom: 45 }}
-              >
+              <AreaChart data={purchaseData} margin={chartMargin}>
                 <XAxis dataKey="date" tick={false} axisLine={false} />
                 <YAxis tickLine={false} tick={false} axisLine={false} />
                 <Tooltip
