@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
     DB_HOST,
@@ -8,15 +9,18 @@ import {
     DB_PORT,
     DB_USERNAME,
 } from 'config/environment';
-import { ProductsModule } from './modules/products/products.module';
-import { MetricsModule } from './modules/metrics/metrics.module';
-import { SalesModule } from './modules/sales/sales.module';
-import { PurchasesModule } from './modules/purchases/purchases.module';
-import { ExpensesModule } from './modules/expenses/expenses.module';
-import { PurchaseSummaryModule } from './modules/purchase-summary/purchase-summary.module';
-import { ExpenseSummaryModule } from './modules/expense-summary/expense-summary.module';
+import { LogResponseInterceptor } from './interceptors/logResponse.interceptor';
+import { LogRequestMiddleware } from './middlewares/logRequest.middleware';
+import { RTracerMiddleware } from './middlewares/rTracer.middleware';
 import { ExpenseByCategoryModule } from './modules/expense-by-category/expense-by-category.module';
+import { ExpenseSummaryModule } from './modules/expense-summary/expense-summary.module';
+import { ExpensesModule } from './modules/expenses/expenses.module';
+import { MetricsModule } from './modules/metrics/metrics.module';
+import { ProductsModule } from './modules/products/products.module';
+import { PurchaseSummaryModule } from './modules/purchase-summary/purchase-summary.module';
+import { PurchasesModule } from './modules/purchases/purchases.module';
 import { SaleSummaryModule } from './modules/sale-summary/sale-summary.module';
+import { SalesModule } from './modules/sales/sales.module';
 
 @Module({
     imports: [
@@ -44,6 +48,15 @@ import { SaleSummaryModule } from './modules/sale-summary/sale-summary.module';
         SaleSummaryModule,
     ],
     controllers: [],
-    providers: [],
+    providers: [
+        {
+            provide: APP_INTERCEPTOR,
+            useClass: LogResponseInterceptor,
+        },
+    ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+    configure(consumer: MiddlewareConsumer): void {
+        consumer.apply(RTracerMiddleware, LogRequestMiddleware).forRoutes('*');
+    }
+}
