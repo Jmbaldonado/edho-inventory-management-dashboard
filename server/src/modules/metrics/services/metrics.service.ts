@@ -16,7 +16,7 @@ export class MetricsService {
     ) {}
 
     async getEDashboardMetrics() {
-        const popularProducts = await this.productsService.getProducts(15);
+        const [popularProducts] = await this.productsService.getProducts(15, 1);
         const salesSummary = await this.saleSummaryService.getSaleSummary(5);
         const purchaseSummary =
             await this.purchaseSummaryService.getPurchaseSummary(5);

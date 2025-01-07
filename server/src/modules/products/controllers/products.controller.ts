@@ -8,11 +8,20 @@ export class ProductsController {
 
     @Get('')
     async getProducts(
-        @Query('limit') limit: number,
-        @Query('offset') offset: number,
+        @Query('pageSize') pageSize: number,
+        @Query('page') page: number,
         @Query('search') search: string,
     ) {
-        return this.productsService.getProducts(limit, offset, search);
+        const [products, totalProducts] =
+            await this.productsService.getProducts(pageSize, page, search);
+        return {
+            data: products,
+            metadata: {
+                current_page: +page,
+                total_records: totalProducts,
+                max_pages: Math.ceil(totalProducts / pageSize) || 1,
+            },
+        };
     }
 
     @Post()
