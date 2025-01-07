@@ -100,6 +100,7 @@ export default function CardPurchaseSummary() {
                       day: "numeric",
                     });
                   }}
+                  wrapperClassName="!bg-white"
                 />
                 <Area
                   type="linear"

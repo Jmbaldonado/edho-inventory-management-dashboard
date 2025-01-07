@@ -132,6 +132,7 @@ export default function CardSalesSummary() {
                       day: "numeric",
                     });
                   }}
+                  wrapperClassName="!bg-white"
                 />
                 <Bar
                   dataKey="totalValue"

@@ -12,10 +12,10 @@ export class ProductsService {
     ) {}
 
     async getProducts(
-        limit: number = 30,
-        offset: number = 1,
+        pageSize?: number,
+        page?: number,
         search?: string,
-    ): Promise<Product[]> {
+    ): Promise<[Product[], number]> {
         const queryOptions: {
             where?: { name: FindOperator<string> };
             take?: number;
@@ -25,13 +25,18 @@ export class ProductsService {
 
         if (search) {
             queryOptions.where = { name: Like(`%${search}%`) };
-        } else {
-            queryOptions.take = limit;
-            queryOptions.skip = offset;
-            queryOptions.order = { stockQuantity: 'DESC' };
         }
 
-        return this.repository.find(queryOptions);
+        // Apply pagination only if pageSize and page are provided
+        if (pageSize && page) {
+            queryOptions.take = pageSize;
+            queryOptions.skip = (page - 1) * pageSize;
+        }
+
+        // Always order by stockQuantity in descending order unless overridden
+        queryOptions.order = { stockQuantity: 'DESC' };
+
+        return this.repository.findAndCount(queryOptions);
     }
 
     async createProduct(product: CreateProductDto): Promise<Product> {
