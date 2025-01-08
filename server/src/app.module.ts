@@ -21,7 +21,7 @@ import { PurchaseSummaryModule } from './modules/purchase-summary/purchase-summa
 import { PurchasesModule } from './modules/purchases/purchases.module';
 import { SaleSummaryModule } from './modules/sale-summary/sale-summary.module';
 import { SalesModule } from './modules/sales/sales.module';
-
+import { UsersModule } from './modules/users/users.module';
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -46,6 +46,7 @@ import { SalesModule } from './modules/sales/sales.module';
         ExpenseSummaryModule,
         ExpenseByCategoryModule,
         SaleSummaryModule,
+        UsersModule,
     ],
     controllers: [],
     providers: [
